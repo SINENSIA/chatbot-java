@@ -9,12 +9,23 @@
       rel="stylesheet"
     />
     <style>
-      /* Clase personalizada para mensajes */
-      #chatbox span.message {
-        font-size: 1.2rem; /* Tamaño de fuente mayor */
-        display: inline-block; /* Se comporta como bloque para ocupar todo el ancho */
-        width: 100%; /* Ajusta el ancho al 100% del contenedor */
-        word-wrap: break-word; /* Permite el ajuste de palabras largas */
+      /* Estilo para la burbuja del usuario */
+      .user-message {
+        max-width: 70%;
+        background-color: #dcf8c6;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        word-wrap: break-word;
+      }
+      /* Estilo para la burbuja del chatbot */
+      .ai-message {
+        max-width: 70%;
+        background-color: #ffffff;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        word-wrap: break-word;
       }
     </style>
   </head>
@@ -49,8 +60,13 @@
           if (message === "") return;
 
           const chatbox = document.getElementById("chatbox");
-          // Mostrar mensaje del usuario usando la clase 'message'
-          chatbox.innerHTML += `<div class="text-end mb-2"><span class="badge bg-primary message">${message}</span></div>`;
+          // Mostrar mensaje del usuario, alineado a la derecha
+          chatbox.innerHTML += `
+          <div class="d-flex justify-content-end">
+            <div class="user-message">
+              ${message}
+            </div>
+          </div>`;
 
           // Enviar mensaje al servidor
           fetch("/chat/message", {
@@ -60,7 +76,13 @@
           })
             .then((response) => response.json())
             .then((data) => {
-              chatbox.innerHTML += `<div class="mb-2"><span class="badge bg-secondary message">${data.response}</span></div>`;
+              // Mostrar respuesta del chatbot, alineada a la izquierda
+              chatbox.innerHTML += `
+              <div class="d-flex justify-content-start">
+                <div class="ai-message">
+                  ${data.response}
+                </div>
+              </div>`;
               chatbox.scrollTop = chatbox.scrollHeight;
             })
             .catch((error) => console.error("Error:", error));
